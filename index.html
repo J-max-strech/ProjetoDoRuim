@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>S.I.C.U. - Módulo de Acesso Cidadão</title>
+    <style>
+        body {
+            background-color: #e0e0e0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 5px;
+            border-bottom: 4px solid #cc0000;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        marquee {
+            background-color: #ffffcc;
+            color: #cc0000;
+            font-weight: bold;
+            padding: 3px;
+            border-bottom: 1px solid #999;
+        }
+
+        .container {
+            width: 780px;
+            margin: 10px auto;
+            background-color: white;
+            border: 1px solid #999;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 4px;
+            vertical-align: middle;
+        }
+
+        .label-bg {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            width: 35%;
+            text-align: right;
+        }
+
+        input[type="text"], input[type="password"], select, textarea {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            border: 1px inset #ccc;
+            padding: 2px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .botoes {
+            text-align: center;
+            margin-top: 20px;
+            background-color: #dcdcdc;
+            padding: 10px;
+            border: 1px solid #999;
+        }
+
+        button {
+            background-color: #e0e0e0;
+            border: 2px outset #fff;
+            padding: 5px 15px;
+            font-family: Arial;
+            font-size: 11px;
+            cursor: pointer;
+            margin: 0 5px;
+            color: #000;
+        }
+
+        button:active { border: 2px inset #fff; }
+
+        #modal-carregando {
+            display: none;
+            position: fixed;
+            top: 40%;
+            left: 40%;
+            background: white;
+            border: 2px solid black;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 5px 5px 0px #888;
+            z-index: 1000;
+        }
+
+        .transparencia {
+            margin-top: 30px;
+            border: 2px dashed #003366;
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+
+        .transparencia h3 {
+            margin-top: 0;
+            color: #003366;
+            font-size: 12px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        ul { list-style-type: square; padding-left: 20px; }
+        li { margin-bottom: 5px; border-bottom: 1px dotted #ccc; padding-bottom: 5px; }
+
+        .nota-rodape {
+            font-size: 9px;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 5px;
+        }
+        
+        .destaque-inutil {
+            color: blue;
+            font-size: 9px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Ministério da Burocracia - Departamento de Formulários Complexos (DFC)</h1>
+        <p style="font-size: 10px; margin: 2px 0;">Sistema Integrado de Cadastramento Único (SICU) v1.0.5.0d - Produção</p>
+    </div>
+
+    <marquee scrollamount="3">AVISO IMPORTANTE: O preenchimento com caneta azul no formulário digital invalida o requerimento. Horário de almoço do servidor do banco de dados: 12h às 14h.</marquee>
+
+    <div class="container">
+        <p><strong>Formulário de Pré-Requerimento de Análise de Cadastro (FPRAC-09)</strong></p>
+        <p style="color: red;">* Campos obrigatórios (Atenção: A falta de preenchimento de campos não obrigatórios também gerará indeferimento sumário).</p>
+
+        <form id="form-governo" onsubmit="return false;">
+            <table>
+                <tr>
+                    <td class="label-bg">Nº do CPF do Titular:</td>
+                    <td><input type="text" id="cpf" maxlength="11" size="15"></td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Unidade Federativa (UF):</td>
+                    <td>
+                        <select id="uf">
+                            <option value="">-- SELECIONE --</option>
+                            <option value="AC">Acre</option>
+                            <option value="TO">Tocantins</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="DF">Distrito Federal</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Data de Nascimento:</td>
+                    <td><input type="text" id="data-nascimento" size="10" placeholder="DD/MM/AAAA"></td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Nome de Solteira da Avó Paterna:</td>
+                    <td><input type="text" id="avo" size="30"> <br><span class="destaque-inutil">(Se não tiver, invente, o sistema não aceita campo vazio).</span></td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Cor da Capa do Processo Físico:</td>
+                    <td>
+                        <select id="cor-processo">
+                            <option value="">-- OBRIGATÓRIO --</option>
+                            <option value="pardo">Papel Pardo (Falta no almoxarifado)</option>
+                            <option value="azul">Azul (Exclusivo para Diretoria)</option>
+                            <option value="rosa">Rosa (Apenas às terças-feiras)</option>
+                            <option value="verde">Verde</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Justificativa do Pedido:</td>
+                    <td>
+                        <textarea id="justificativa" rows="3" cols="40"></textarea>
+                        <br><span class="destaque-inutil">(O sistema NÃO possui contador automático. Aja conforme a norma).</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Termo de Responsabilidade:</td>
+                    <td>
+                        <input type="checkbox" id="termo1"> Declaro que li a <a href="#" onclick="alert('Erro 404: Portaria revogada, mas ainda exigida.')">Portaria Normativa nº 12.443/2002</a>.<br>
+                        <input type="checkbox" id="termo2"> Juro por escrito que entreguei a Foto 3x4 (fundo branco) no Balcão 4.<br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-bg">Validação Humana (Decreto 8.539/15):</td>
+                    <td>Para fins de autenticação digital, decodifique a seguinte chave Base64 (maiúsculas):<br>
+                        <strong>QkFMQ0FP</strong> <br>
+                        <input type="text" id="captcha" size="15" placeholder="Insira o texto puro">
+                    </td>
+                </tr>
+            </table>
+
+            <div class="botoes">
+                <button type="button" onclick="limparTudo()">Limpar Formulário</button>
+                <button type="button" onclick="alert('Retorno de tela não autorizado pelo supervisor da área.')">Retornar à Tela Anterior</button>
+                <button type="button" onclick="validarBurocracia()">Protocolar Requerimento</button>
+            </div>
+        </form>
+
+        <div class="transparencia">
+            <h3>Portal de Transparência de Protocolos (Acesso Público restrito)</h3>
+            <button onclick="carregarRegistros()">Atualizar Diário Oficial</button>
+            <button onclick="apagarTudo()" style="color: red;">Excluir Base do Datacenter</button>
+            <ul id="lista-registros">
+                <li>Nenhum dado carregado na memória RAM.</li>
+            </ul>
+        </div>
+
+        <div class="nota-rodape">
+            Resolução nº 45.981/1998. O uso indevido deste sistema constitui crime federal. <br>
+            Melhor visualizado no Internet Explorer 5.5 em resolução 800x600.
+        </div>
+    </div>
+
+    <div id="modal-carregando">
+        Aguarde. Assinando com certificado digital revogado...<br>
+        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpCQkCH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MxFZ2noGSeo1RBhA0D81yCq1AMxPAl1zB83L1N2Xb4yA2CAuAowmgEAAA7" alt="loading" style="margin-top: 10px;">
+    </div>
+
+    <script>
+        let db;
+        let tentativas = 0;
+        let tempoInicio = Date.now();
+
+        const request = indexedDB.open('SistemaBurocraticoDB', 2); 
+
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains('requerimentos')) {
+                db.createObjectStore('requerimentos', { keyPath: 'protocolo' });
+            }
+        };
+
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            carregarRegistros();
+        };
+
+        request.onerror = (e) => {
+            console.error("Erro no IndexedDB", e);
+        };
+
+        let tempoSessao = 90; 
+        setInterval(() => {
+            tempoSessao--;
+            if(tempoSessao === 15) {
+                alert("Aviso: Sua sessão do e-Cidadão expira em 15 segundos.");
+            }
+            if(tempoSessao <= 0 && document.body.innerHTML.indexOf("SISTEMA INDISPONÍVEL") === -1) {
+                alert("Sessão Expirada. Erro SESS-9002.");
+                document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px; color:red;'>SISTEMA INDISPONÍVEL - SESSÃO ENCERRADA</h2>";
+            }
+        }, 1000);
+
+        function limparTudo() {
+            if(confirm("Deseja realmente apagar todos os dados que você demorou para digitar?")) {
+                document.getElementById('form-governo').reset();
+            }
+        }
+
+        function validarBurocracia() {
+            tentativas++; 
+            
+            const cpf = document.getElementById('cpf').value;
+            const uf = document.getElementById('uf').value;
+            const dataNasc = document.getElementById('data-nascimento').value;
+            const avo = document.getElementById('avo').value;
+            const corProcesso = document.getElementById('cor-processo').value;
+            const justificativa = document.getElementById('justificativa').value;
+            const termo1 = document.getElementById('termo1').checked;
+            const termo2 = document.getElementById('termo2').checked;
+            const captcha = document.getElementById('captcha').value;
+
+            if(cpf.length === 0 || dataNasc.length === 0) {
+                alert("Erro 0x8891A: Campo obrigatório não preenchido."); return;
+            }
+            if(uf === "") {
+                alert("Por favor, selecione uma UF válida."); return;
+            }
+            if(avo.trim().length < 3) {
+                alert("O Nome de Solteira da Avó Paterna inválido."); return;
+            }
+            if(corProcesso !== "verde") {
+                alert("A cor do processo selecionada não é permitida para seu nível hierárquico."); return;
+            }
+            
+            // AVALIAÇÃO CEGA DA JUSTIFICATIVA
+            if(justificativa.length < 50) {
+                alert("Indefere-se o pleito. A justificativa apresentada contém caracteres insuficientes para abertura de processo. Favor adequar-se à norma vigente."); 
+                return;
+            }
+
+            if(!termo1 || !termo2) {
+                alert("É obrigatório aceitar os termos de responsabilidade e confirmar a entrega física de documentos."); return;
+            }
+
+            // O NOVO CAPTCHA DE CRIPTOGRAFIA (A string QkFMQ0FP em Base64 significa BALCAO)
+            if(captcha !== "BALCAO") {
+                alert("Falha na autenticação criptográfica. O sistema detectou possível ação automatizada (Robô) ou incompetência técnica do usuário.");
+                document.getElementById('captcha').value = ""; return;
+            }
+
+            document.getElementById('modal-carregando').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('modal-carregando').style.display = 'none';
+                salvarNoBanco(cpf, uf, dataNasc, avo);
+            }, 4000); 
+        }
+
+        function salvarNoBanco(cpf, uf, dataNasc, avo) {
+            const tempoGasto = Math.floor((Date.now() - tempoInicio) / 1000);
+            const registro = {
+                protocolo: Date.now(),
+                cpf: cpf,
+                uf: uf,
+                dataNascimento: dataNasc,
+                avo: avo,
+                tentativas: tentativas,
+                tempoGastoSegundos: tempoGasto,
+                dataInclusao: new Date().toLocaleString()
+            };
+
+            const tx = db.transaction('requerimentos', 'readwrite');
+            const store = tx.objectStore('requerimentos');
+            store.add(registro);
+
+            tx.oncomplete = () => {
+                alert(`Sucesso Parcial. Protocolo gerado: ${registro.protocolo}. Por favor, imprima esta tela, assine em três vias e reconheça firma em cartório.`);
+                document.getElementById('form-governo').reset();
+                tentativas = 0;
+                tempoInicio = Date.now();
+                tempoSessao = 90; 
+                carregarRegistros();
+            };
+
+            tx.onerror = () => {
+                alert("Erro ao gravar no Datacenter (Carimbo digital sem tinta).");
+            };
+        }
+
+        function carregarRegistros() {
+            if(!db) return;
+            const lista = document.getElementById('lista-registros');
+            lista.innerHTML = '';
+
+            const tx = db.transaction('requerimentos', 'readonly');
+            const store = tx.objectStore('requerimentos');
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const dados = request.result;
+                if(dados.length === 0) {
+                    lista.innerHTML = '<li>Nenhum requerimento protocolado no momento.</li>';
+                    return;
+                }
+
+                dados.forEach(req => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Prot:</strong> ${req.protocolo} | <strong>CPF:</strong> ${req.cpf} | <strong>UF:</strong> ${req.uf} <br>
+                    <span style='font-size: 10px; color: #666;'>Avó Paterna: ${req.avo} | Tentativas: ${req.tentativas} | Tempo: ${req.tempoGastoSegundos}s | Registrado: ${req.dataInclusao}</span>`;
+                    lista.appendChild(li);
+                });
+            };
+        }
+
+        function apagarTudo() {
+            if(!confirm("Atenção Servidor: Deseja realizar um DROP TABLE na base de requerimentos? Esta ação é irreversível e exige memorando prévio.")) return;
+            
+            const tx = db.transaction('requerimentos', 'readwrite');
+            const store = tx.objectStore('requerimentos');
+            store.clear();
+
+            tx.oncomplete = () => {
+                alert("Base de dados limpa com sucesso. Todos os requerimentos foram incinerados.");
+                carregarRegistros();
+            };
+        }
+    </script>
+</body>
+</html>
